@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import Comment from './Comment'
+import { findDOMNode } from 'react-dom'
 import toggleOpen from '../decorators/toggleOpen'
+import {addComment} from '../AC/comments'
 
 class CommentList extends Component {
     static defaultProps = {
@@ -18,6 +20,7 @@ class CommentList extends Component {
             <div>
                 {this.getToggler()}
                 {this.getList()}
+                {this.renderAddComment()}
             </div>
         )
     }
@@ -43,6 +46,20 @@ class CommentList extends Component {
         if (!comments || !comments.length) return <h3>No comments yet</h3>
         const items = comments.map(comment => <li key = {comment.id}><Comment comment = {comment} /></li>)
         return <ul>{items}</ul>
+    }
+    renderAddComment(){
+        const input = <div>
+            <label>Name</label>
+            <input type="text" ref="nameValue" />
+            <label>Text</label>
+            <input type="text" ref="textValue" />
+            <input type="button" value="add" onClick={this.addCommentHandler}/>
+        </div>
+        return input
+    }
+    addCommentHandler = () =>{
+        addComment(this.refs.textValue.value);
+        this.refs.commentValue.value = '';
     }
 }
 
